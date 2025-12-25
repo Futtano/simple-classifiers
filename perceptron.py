@@ -1,25 +1,51 @@
-import os
 import numpy as np
-import pandas as pd
 
 class Perceptron:
-    def __init__(self, eta, n_iter, random_state=42):
+    """A simple class implementation of a Perceptron classifier
+
+    Parameters
+    -----------
+    eta: float
+        Learning rate (between 0.0 and 1.0)
+    n_iter: int
+        Number of epochs (number of iterations over the training 
+        dataset)
+    random_state: int
+        Seed for the random initialization of the weights and bias.
+    """
+
+    def __init__(self, eta=0.01, n_iter=50, random_state=1):
         self.eta = eta
         self.n_iter = n_iter
         self.random_state = random_state
 
     def fit(self, X, y):
-        self._initwb_(X.shape[1])
+        """Trains the Perceptron to fit the training data
+
+        Parameters
+        -----------
+        X: [array-like], shape = [n_samples, n_features]
+            Training vectors. n_features is the number of predictors
+            per sample, while n_sample is the number of samples in 
+            the training dataset
+        y: array-like, shape = [n_samples]
+            Vector with the corresponding class for each of the
+            training samples in the training dataset
+
+        Returns
+        --------
+        self:  object
+        """
+        self._initwb(X.shape[1])
         self.errors_ = []
 
         for i in range(self.n_iter):
             errors = 0
             for xi, target in zip(X, y):
                 delta = self.eta * (target - self.predict(xi))
-                if delta != 0.0:
-                    self.w_ += delta * xi
-                    self.b_ += delta
-                    errors += 1
+                self._w += delta * xi
+                self._b += delta
+                errors += int(delta != 0)
             self.errors_.append(errors)
             if errors == 0:
                 print(f'End of training, converged after {i + 1} iterations.')
@@ -29,15 +55,16 @@ class Perceptron:
         return self
                 
     def _net_input(self, X):
-        return np.dot(X, self.w_) + self.b_
+        """Calculate the weighted sum input to the neuron"""
+        return np.dot(X, self._w) + self._b
     
     def predict(self, X):
-        return np.where(self._net_input(X) < 0.0, 0, 1)
+        """Calculate the activation step function and return class prediciton"""
+        net_input = self._net_input(X)
+        return np.where(net_input >= 0.0, 1, 0)
 
-    def _initwb_(self, n_features):
-        rgen = np.random.RandomState(self.random_state)
-        self.w_ = rgen.normal(loc=0.0, scale=0.01, size=n_features)
-        self.b_ = np.float_(0.0)
-
-df = pd.read_csv("iris.data.csv", header=None, encoding='utf-8')
-df.tail()
+    def _initwb(self, n_features):
+        """Initialize weights and bias of the Perceptron"""
+        self._rgen = np.random.RandomState(self.random_state)
+        self._w = self._rgen.normal(loc=0.0, scale=0.01, size=n_features)
+        self._b = np.float_(0.)
