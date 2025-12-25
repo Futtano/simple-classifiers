@@ -1,0 +1,1 @@
+This repository contains simple Python class implementations of Perceptron, Adaline an Adaline with Stochastic Gradient Descent classifiers. They can be useful to understand the basic concepts of machine learning.   

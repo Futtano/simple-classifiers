@@ -59,7 +59,7 @@ class Perceptron:
         return np.dot(X, self._w) + self._b
     
     def predict(self, X):
-        """Calculate the activation step function and return class prediciton"""
+        """Calculate the activation step function and return class prediction"""
         net_input = self._net_input(X)
         return np.where(net_input >= 0.0, 1, 0)
 
