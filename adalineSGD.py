@@ -11,6 +11,8 @@ class AdalineSGD:
     n_iter: int
         Number of epochs (number of iterations over the training 
         dataset)
+    shuffle: bool
+        Set to True to shuffle randomly the samples for each epoch
     random_state: int
         Seed for the random initialization of the weights and bias.
     tol: float
